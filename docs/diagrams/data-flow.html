@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How data moves through Roles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #ffffff; --fg: #0a0a0a; --muted: #f5f5f5; --muted-fg: #737373; --soft: #525252; --border: #e5e5e5; }
+    body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--fg); padding: 48px 32px; -webkit-font-smoothing: antialiased; }
+    .frame { max-width: 1280px; margin: 0 auto; }
+    .eyebrow { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; color: var(--soft); margin-bottom: 12px; }
+    h1 { font-size: clamp(28px, 3vw + 12px, 40px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.05;
+          background: linear-gradient(180deg, #262626, #404040); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; }
+    .lead { font-size: 18px; font-weight: 300; line-height: 1.55; color: var(--muted-fg); max-width: 62ch; margin-bottom: 32px; }
+    .diagram-container { width: 100%; overflow-x: auto; border-top: 1px solid var(--border); padding-top: 24px; }
+    svg { width: 100%; min-width: 1280px; display: block; }
+    .notes { display: grid; grid-template-columns: 1.15fr 1fr 0.9fr; gap: 16px; margin-top: 32px; }
+    .card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .card h2 { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .card h2 i { width: 7px; height: 7px; border-radius: 50%; background: var(--fg); }
+    .card p { font-size: 14px; line-height: 1.55; color: var(--soft); }
+    .card code { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px; color: var(--fg); }
+    footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: var(--soft); }
+    @media (max-width: 760px) { .notes { grid-template-columns: 1fr; } }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Roles.tsx</p>
+    <h1>How data moves through Roles</h1>
+    <p class="lead">Two copies of the roles live in state: the working copy you edit and the saved snapshot. Everything you see is derived from the two on each render.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 120 1280 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rbac-data-flow-title rbac-data-flow-desc">
+        <title id="rbac-data-flow-title">How data moves through Roles</title>
+        <desc id="rbac-data-flow-desc">Props seed the working roles and the saved snapshot; user input runs handlers that patch the working roles; the sentence, reach and change count are derived from both copies and rendered; Save copies working to saved and calls onSave.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#737373"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#171717"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0a0a0a"/></marker>
+        </defs>
+        <rect x="0" y="120" width="1280" height="560" fill="#ffffff"/>
+        <!-- arrows -->
+        <path d="M200,180 H560" fill="none" stroke="#737373" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M200,432 H300" fill="none" stroke="#737373" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M380,400 V216 Q380,208 388,208 H560" fill="none" stroke="#737373" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M460,432 H560" fill="none" stroke="#737373" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M640,400 V224" fill="none" stroke="#737373" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <path d="M720,192 H820" fill="none" stroke="#171717" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <path d="M720,432 H892 Q900,432 900,424 V224" fill="none" stroke="#737373" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M980,192 H1080" fill="none" stroke="#171717" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <path d="M380,464 V512 Q380,520 388,520 H1152 Q1160,520 1160,512 V464" fill="none" stroke="#737373" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <!-- labels -->
+        <rect x="464.0" y="160" width="32" height="12" rx="2" fill="#ffffff"/><text x="480" y="169" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">INIT</text>
+        <rect x="230.0" y="412" width="40" height="12" rx="2" fill="#ffffff"/><text x="250" y="421" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">EVENT</text>
+        <rect x="388.0" y="296" width="40" height="12" rx="2" fill="#ffffff"/><text x="408" y="305" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">PATCH</text>
+        <rect x="494.0" y="412" width="32" height="12" rx="2" fill="#ffffff"/><text x="510" y="421" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">SAVE</text>
+        <rect x="648.0" y="306" width="48" height="12" rx="2" fill="#ffffff"/><text x="672" y="315" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">DISCARD</text>
+        <rect x="754.0" y="172" width="32" height="12" rx="2" fill="#ffffff"/><text x="770" y="181" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">READ</text>
+        <rect x="774.0" y="412" width="32" height="12" rx="2" fill="#ffffff"/><text x="790" y="421" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">DIFF</text>
+        <rect x="1008.0" y="172" width="44" height="12" rx="2" fill="#ffffff"/><text x="1030" y="181" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">RENDER</text>
+        <rect x="744.0" y="500" width="72" height="12" rx="2" fill="#ffffff"/><text x="780" y="509" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">AFTER 650 MS</text>
+        <!-- nodes -->
+        <g><rect x="40" y="160" width="160" height="64" rx="6" fill="#ffffff"/><rect x="40" y="160" width="160" height="64" rx="6" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1"/><rect x="48" y="168" width="20" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="58.0" y="177" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">IN</text><text x="120.0" y="198.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">Props</text><text x="120.0" y="213.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">roles · resources</text></g>
+        <g><rect x="40" y="400" width="160" height="64" rx="6" fill="#ffffff"/><rect x="40" y="400" width="160" height="64" rx="6" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1"/><rect x="48" y="408" width="20" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="58.0" y="417" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">IN</text><text x="120.0" y="438.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">User input</text><text x="120.0" y="453.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">click · keys · hover</text></g>
+        <g><rect x="300" y="400" width="160" height="64" rx="6" fill="#ffffff"/><rect x="300" y="400" width="160" height="64" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/><rect x="308" y="408" width="20" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="318.0" y="417" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">FN</text><text x="380.0" y="438.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">Handlers</text><text x="380.0" y="453.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">setLevel · addRole</text></g>
+        <g><rect x="560" y="160" width="160" height="64" rx="6" fill="#ffffff"/><rect x="560" y="160" width="160" height="64" rx="6" fill="rgba(10,10,10,0.04)" stroke="#737373" stroke-width="1"/><rect x="568" y="168" width="32" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="584.0" y="177" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">STATE</text><text x="640.0" y="198.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">Working roles</text><text x="640.0" y="213.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">roles · sel · cmp</text></g>
+        <g><rect x="560" y="400" width="160" height="64" rx="6" fill="#ffffff"/><rect x="560" y="400" width="160" height="64" rx="6" fill="rgba(10,10,10,0.04)" stroke="#737373" stroke-width="1"/><rect x="568" y="408" width="32" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="584.0" y="417" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">STATE</text><text x="640.0" y="438.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">Saved snapshot</text><text x="640.0" y="453.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">saved</text></g>
+        <g><rect x="820" y="160" width="160" height="64" rx="6" fill="#ffffff"/><rect x="820" y="160" width="160" height="64" rx="6" fill="#171717" stroke="#171717" stroke-width="1"/><rect x="828" y="168" width="40" height="12" rx="2" fill="none" stroke="rgba(250,250,250,0.45)" stroke-width="0.8"/><text x="848.0" y="177" fill="#e5e5e5" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">RENDER</text><text x="900.0" y="198.0" fill="#fafafa" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">Derived values</text><text x="900.0" y="213.0" fill="#a3a3a3" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">Sentence · reach · diff</text></g>
+        <g><rect x="1080" y="160" width="160" height="64" rx="6" fill="#ffffff"/><rect x="1080" y="160" width="160" height="64" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/><rect x="1088" y="168" width="20" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="1098.0" y="177" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">UI</text><text x="1160.0" y="198.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">Rendered card</text><text x="1160.0" y="213.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">list · rails · bar</text></g>
+        <g><rect x="1080" y="400" width="160" height="64" rx="6" fill="#ffffff"/><rect x="1080" y="400" width="160" height="64" rx="6" fill="#ffffff" stroke="#737373" stroke-width="1" stroke-dasharray="4,3"/><rect x="1088" y="408" width="28" height="12" rx="2" fill="none" stroke="rgba(10,10,10,0.35)" stroke-width="0.8"/><text x="1102.0" y="417" fill="#525252" font-size="7" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.08em">PROP</text><text x="1160.0" y="438.0" fill="#0a0a0a" font-size="12" font-weight="600" font-family="Inter, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">onSave callback</text><text x="1160.0" y="453.0" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace" text-anchor="middle">onSave(roles)</text></g>
+        <!-- legend -->
+        <line x1="40" y1="612" x2="1240" y2="612" stroke="#e5e5e5" stroke-width="1"/><text x="40" y="640" fill="#525252" font-size="8" font-family="'IBM Plex Mono', ui-monospace, monospace" letter-spacing="0.14em">LEGEND</text><rect x="120" y="630" width="24" height="14" rx="3" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1"/><text x="152" y="640" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace">input</text><rect x="216" y="630" width="24" height="14" rx="3" fill="rgba(10,10,10,0.04)" stroke="#737373" stroke-width="1"/><text x="248" y="640" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace">state</text><rect x="312" y="630" width="24" height="14" rx="3" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/><text x="344" y="640" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace">code / UI</text><rect x="431" y="630" width="24" height="14" rx="3" fill="#171717" stroke="#171717" stroke-width="1"/><text x="463" y="640" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace">derived each render</text><rect x="606" y="630" width="24" height="14" rx="3" fill="#ffffff" stroke="#737373" stroke-width="1" stroke-dasharray="4,3"/><text x="638" y="640" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace">your callback</text><line x1="747" y1="637" x2="771" y2="637" stroke="#737373" stroke-width="1.2" stroke-dasharray="5,4"/><text x="779" y="640" fill="#525252" font-size="9" font-family="'IBM Plex Mono', ui-monospace, monospace">copy back / async</text>
+      </svg>
+    </div>
+    <div class="notes"><div class="card"><h2><i></i>Two copies, one diff</h2><p>Every unsaved marker (dots, the count in the bar) comes from comparing <code>roles</code> with <code>saved</code>. Nothing tracks edits as they happen, so an edit undone by hand stops counting by itself.</p></div><div class="card"><h2><i></i>Props are read once</h2><p><code>roles</code> and <code>selected</code> seed state on mount. Changing them afterwards does nothing; remount with a new <code>key</code> to reset.</p></div><div class="card"><h2><i></i>Save is a copy</h2><p>After 650 ms, <code>saved</code> becomes the working roles and <code>onSave</code> gets the same array.</p></div></div>
+    <footer>Roles.tsx · source documentation · see ../TECHNICAL.md and ../API.md</footer>
+  </div>
+</body>
+</html>
