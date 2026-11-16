@@ -71,14 +71,15 @@ const CSS = `/* kit-shield: undo Tailwind preflight inside the component (Kit) *
 :where(.rp) :where(summary) { display: revert; }
 :where(.rp) ::placeholder { color: revert; opacity: revert; }
 
-.rp{--bg:#ffffff;--ink:#18181a;--txt:#55555b;--mute:#9a9a9f;--faint:#c9c9cc;--line:#eeeeec;--soft:#f6f6f4;--hov:#fafaf9;--acc:#3d50e8;--ok:#1f9d55;--warm:#e5602f;--danger:#c93a3a;--dtint:#fdf3f3;--track:#ebebe8;
-  container-type:inline-size;position:relative;width:min(1040px,100%);background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:24px;
+.rp{--bg:#ffffff;--ink:#18181a;--txt:#55555b;--mute:#6f6f75;--faint:#c9c9cc;--line:#eeeeec;--soft:#f6f6f4;--hov:#fafaf9;--acc:#3d50e8;--ok:#1f9d55;--warm:#e5602f;--warmtx:#c4471a;--danger:#c93a3a;--dtint:#fdf3f3;--track:#ebebe8;
+  container-type:inline-size;position:relative;width:min(1040px,100%);background:var(--bg);border:1px solid var(--line);border-radius:18px;
   font-family:Inter,system-ui,sans-serif;font-size:13px;color:var(--ink);-webkit-font-smoothing:antialiased;box-sizing:border-box;text-align:left}
-.rp.dark{--bg:#121214;--ink:#f2f2f3;--txt:#b4b4ba;--mute:#7a7a81;--faint:#47474d;--line:#232327;--soft:#1b1b1f;--hov:#17171a;--acc:#8293ff;--ok:#3ccf7d;--warm:#ff7a4a;--danger:#ff6b6b;--dtint:#2a1717;--track:#2a2a2f}
+.rp.dark{--bg:#121214;--ink:#f2f2f3;--txt:#b4b4ba;--mute:#8b8b92;--faint:#47474d;--line:#232327;--soft:#1b1b1f;--hov:#17171a;--acc:#8293ff;--ok:#3ccf7d;--warm:#ff7a4a;--warmtx:#ff7a4a;--danger:#ff6b6b;--dtint:#2a1717;--track:#2a2a2f}
 .rp *,.rp *::before,.rp *::after{box-sizing:border-box}
 .rp button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 .rp button:focus-visible,.rp input:focus-visible,.rp [role="radiogroup"]:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .rp p{margin:0}
+.rp .pad{padding:24px}
 .rp .head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--line)}
 .rp h2{margin:0;font:400 30px/1.1 Inter,system-ui,sans-serif;letter-spacing:-0.03em}
 .rp .sub{margin-top:10px;color:var(--mute);font-size:12.5px}
@@ -130,7 +131,7 @@ const CSS = `/* kit-shield: undo Tailwind preflight inside the component (Kit) *
 .rp .x>div{min-height:0;overflow:hidden}
 .rp .strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 10px 10px 14px;border-radius:12px;background:var(--dtint);color:var(--danger)}
 .rp .strip span{display:flex;gap:4px}
-.rp .strip .go{height:30px;padding:0 12px;border-radius:8px;background:var(--danger);color:#fff;font-weight:500;transition:transform .12s}
+.rp .strip .go{height:30px;padding:0 12px;border-radius:8px;background:var(--danger);color:var(--bg);font-weight:500;transition:transform .12s}
 .rp .strip .go:active{transform:scale(.96)}
 
 .rp .rows{margin-top:18px;border-top:1px solid var(--line)}
@@ -140,7 +141,7 @@ const CSS = `/* kit-shield: undo Tailwind preflight inside the component (Kit) *
 .rp .who p{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500}
 .rp .who .h{display:block;margin-top:2px;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rp .who .mk{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:rp-pop .3s cubic-bezier(.3,1.6,.5,1) both}
-.rp .who .sens{display:inline-flex;align-items:center;color:var(--warm);font-size:11.5px;font-weight:400;animation:rp-up .3s ease both}
+.rp .who .sens{display:inline-flex;align-items:center;color:var(--warmtx);font-size:11.5px;font-weight:400;animation:rp-up .3s ease both}
 
 .rp .rail{position:relative;display:grid;grid-template-columns:repeat(4,1fr);height:44px;border-radius:8px;--dl:0ms}
 .rp .rail .tr,.rp .rail .fl{position:absolute;left:12.5%;top:12px;height:4px;border-radius:99px;pointer-events:none}
@@ -184,7 +185,7 @@ const CSS = `/* kit-shield: undo Tailwind preflight inside the component (Kit) *
 .rp .bar .ok .dot{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ok);color:#fff;animation:rp-pop .35s cubic-bezier(.3,1.6,.5,1) both}
 .rp .bar .ok b{font-family:inherit}
 .rp .bar .ok em{font-style:normal;opacity:.6}
-@container (max-width: 520px){.rp .bar .ok em{display:none}}
+@container (max-width: 568px){.rp .bar .ok em{display:none}}
 .rp .bar span{display:flex;gap:6px}
 .rp .bar .d{height:32px;padding:0 12px;border-radius:9px;color:inherit;opacity:.75;transition:opacity .15s,background .15s,transform .12s}
 .rp .bar .d:hover{opacity:1;background:color-mix(in srgb,var(--bg) 12%,transparent)}
@@ -203,7 +204,8 @@ const CSS = `/* kit-shield: undo Tailwind preflight inside the component (Kit) *
 @keyframes rp-bar{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
 @keyframes rp-barout{to{opacity:0;transform:translateY(12px)}}
 
-@container (max-width: 760px){
+/* the card has no padding of its own (it sits on .pad, so these queries can change it): 808 and 568 are the old 760 and 520 plus the 48px it used to take */
+@container (max-width: 808px){
   .rp .body{grid-template-columns:1fr;gap:20px}
   .rp .list{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 18px;border-right:0;border-bottom:1px solid var(--line)}
   .rp .list .lab,.rp .thumb,.rp .tip,.rp .faces{display:none}
@@ -215,8 +217,8 @@ const CSS = `/* kit-shield: undo Tailwind preflight inside the component (Kit) *
   .rp .det{grid-row:3}
   .rp .can{margin-left:0}
 }
-@container (max-width: 520px){
-  .rp{padding:18px 14px}
+@container (max-width: 568px){
+  .rp .pad{padding:18px 14px}
   .rp h2{font-size:24px}
   .rp .head{flex-direction:column}
   .rp .title{font-size:22px}
@@ -283,7 +285,7 @@ function Sentence({ role, resources }: { role: Role; resources: Resource[] }) {
       {groups.map((g, i) => (
         <span key={g.l}>{i > 0 ? (i === groups.length - 1 ? ', and ' : ', ') : ''}<b>{VERB[g.l]}</b> {join(g.names)}</span>
       ))}
-      .{hidden.length > 0 && <> {join(hidden)} {hidden.length === 1 ? 'stays' : 'stay'} hidden.</>}
+      .{hidden.length > 0 && <> {join(hidden)} {hidden.length === 1 && !/s$/i.test(hidden[0]) ? 'stays' : 'stay'} hidden.</>}
     </>
   );
 }
@@ -389,6 +391,7 @@ export default function Roles({
     <div className={['rp', theme === 'dark' ? 'dark' : '', className].filter(Boolean).join(' ')} style={style}>
       {/* as raw HTML: React 18's server renderer escapes quotes and > in a text child, which breaks the selectors */}
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      <div className="pad">
       <div className="head">
         <div>
           <h2>Roles &amp; permissions</h2>
@@ -497,6 +500,7 @@ export default function Roles({
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );
